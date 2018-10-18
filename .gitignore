@@ -1,0 +1,7 @@
+.snakemake
+datasets
+design
+.Rproj.user
+.Rhistory
+*.history
+.certigo

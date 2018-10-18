@@ -1,0 +1,43 @@
+dist: trusty
+language: R
+services:
+  - docker
+cache:
+  - packages
+
+# define docker image organisation and name, which should be the same as those in the snakefile
+# make sure $DOCKERHUB_USER and $DOCKERHUB_PASSWORD as encrypted environment variables
+env:
+  global:
+    - DOCKERHUB_ORGANISATION=komparo
+    - DOCKERHUB_REPO=tde_datasets_dyntoy
+
+# install -------------------------------------------------------------------------------------
+# - pull cache from dockerhub (based on https://medium.com/mobileforgood/coding-tips-patterns-for-continuous-integration-with-docker-on-travis-ci-9cedb8348a62)
+# - build container
+# - install conda and snakemake
+# - push container
+before_install:
+  - docker pull ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} || true
+  - git clone https://github.com/komparo/travis_scripts.git
+  - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+install:
+  - docker build --pull --cache-from ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} --tag ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} .
+  - docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}
+  - R -e "install.packages('devtools')"
+  - R -e "devtools::install_github('komparo/certigo@devel')"
+after_install:
+  - docker images
+
+# script -------------------------------------------------------------------------------------
+# - run test rule
+script:
+  - Rscript test.R
+
+# deploy -------------------------------------------------------------------------------------
+# - todo: send message to webhook for pull request in main repo
+deploy:
+  provider: script
+  script: echo "deploy!"
+  on:
+    branch: master

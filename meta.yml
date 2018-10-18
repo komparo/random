@@ -1,0 +1,16 @@
+authors:
+  - name: Wouter Saelens
+    roles:
+      - Conceptualization
+      - Methodology
+      - Software
+    orcid: 0000-0002-7114-6248
+    github: zouter
+    email: wouter.saelens@gmail.com
+  - name: Robrecht Cannoodt
+    roles:
+      - Conceptualization
+      - Methodology
+      - Software
+    orcid: 0000-0003-3641-729X
+    github: rcannood
