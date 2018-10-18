@@ -15,7 +15,7 @@ env:
 # install -------------------------------------------------------------------------------------
 # - pull cache from dockerhub (based on https://medium.com/mobileforgood/coding-tips-patterns-for-continuous-integration-with-docker-on-travis-ci-9cedb8348a62)
 # - build container
-# - install conda and snakemake
+# - install certigo
 # - push container
 before_install:
   - docker pull ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} || true
