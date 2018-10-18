@@ -18,9 +18,9 @@ env:
 # - install certigo
 # - push container
 before_install:
-  - docker pull ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} || true
   - git clone https://github.com/komparo/travis_scripts.git
   - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  - docker pull ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} || true
 install:
   - docker build --pull --cache-from ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} --tag ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} .
   - docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}
