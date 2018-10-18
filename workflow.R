@@ -17,8 +17,8 @@ run_method_expression <- rlang::quo(rscript_call(
     expression = derived_file(str_glue("{datasets_folder}/{dataset_id}/expression.csv"))
   ),
   outputs = list(
-    tde_overall = derived_file(str_glue("{models_folder}/{dataset_id}/{id}/tde_overall.csv")),
-    meta = derived_file(str_glue("{models_folder}/{dataset_id}/{id}/meta.yml"))
+    tde_overall = derived_file(str_glue("{output_folder}/{dataset_id}/{id}/tde_overall.csv")),
+    meta = derived_file(str_glue("{output_folder}/{dataset_id}/{id}/meta.yml"))
   ),
   design = design,
   params = params,
