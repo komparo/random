@@ -11,7 +11,7 @@ call <- rlang::eval_tidy(
   run_method_expression,
   data = list(
     design = design[1, ],
-    params = list(workflow_folder = ".", datasets_folder = ".", output_folder = ".", dataset_id = "test_data")
+    params = list(workflow_folder = ".", datasets_folder = ".", dataset_id = "test_data", output_folder = "./models")
   )
 )
 call$start_and_wait()
