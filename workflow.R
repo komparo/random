@@ -5,14 +5,14 @@ library(tidyr)
 library(stringr)
 library(dplyr)
 
-method_design <- tibble(
+method_design_all <- tibble(
   percentage_differentially_expressed = c(0, 0.25, 0.5, 0.75, 1),
   seed = 1
 ) %>% 
   transmute(parameters = dynutils::mapdf(., parameters)) %>% 
   mutate(id = as.character(seq_len(n())))
 
-generate_method_calls <- function(datasets, method_design = method_design, workflow_folder = ".", models_folder = "models") {
+generate_method_calls <- function(datasets, method_design = method_design_all, workflow_folder = ".", models_folder = "models") {
   design <- crossing(
     datasets$design %>% setNames(paste0("dataset_", names(.))) %>% bind_cols(datasets$outputs),
     method_design

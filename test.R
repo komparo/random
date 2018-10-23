@@ -12,7 +12,7 @@ datasets <- generate_dataset_calls(
 )
 
 run_method <- generate_method_calls(
-  method_design = method_design[1, ],
+  method_design = method_design_all[1, ],
   datasets = datasets,
   models_folder = "results/models"
 )
