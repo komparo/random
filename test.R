@@ -1,23 +1,20 @@
 source('workflow.R')
 
-dataset_design <- tibble(
-  id = "1"
-)
+fs::dir_delete("modules")
+git2r::clone("https://github.com/komparo/tde_dataset_dyntoy", local_path = "modules/dataset")
 
-datasets <- rscript_call(
-  "datasets/dummy",
-  design = dataset_design,
-  inputs = list(
-    script = script_file("scripts/generate_test_data.R")
-  ),
-  outputs = dataset_design %>% transmute(
-    expression = str_glue("datasets/{id}/expression.csv") %>% purrr::map(derived_file)
-  )
+source("modules/dataset/workflow.R")
+
+datasets <- generate_dataset_calls(
+  workflow_folder = "modules/dataset",
+  datasets_folder = "results/datasets",
+  dataset_design = dataset_design[1, ]
 )
 
 run_method <- generate_method_calls(
   method_design = method_design[1, ],
-  datasets = datasets
+  datasets = datasets,
+  models_folder = "results/models"
 )
 
 workflow <- workflow(
