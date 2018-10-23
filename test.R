@@ -8,7 +8,7 @@ source("modules/dataset/workflow.R")
 datasets <- generate_dataset_calls(
   workflow_folder = "modules/dataset",
   datasets_folder = "results/datasets",
-  dataset_design = dataset_design[1, ]
+  dataset_design = dataset_design_all[1, ]
 )
 
 run_method <- generate_method_calls(
