@@ -2,8 +2,8 @@ library(readr)
 library(dplyr)
 
 # read parameters
-design <- jsonlite::fromJSON(inputs[["design"]])
-set.seed(design$seed)
+parameters <- jsonlite::fromJSON(inputs[["parameters"]])
+set.seed(parameters$seed)
 
 # read expression
 expression <- read.csv(inputs[["expression"]], row.names = 1) %>% as.matrix()
@@ -13,7 +13,7 @@ tde_overall <- tibble(
   feature_id = colnames(expression)
 ) %>% 
   mutate(
-    tde_overall = runif(n()) <= design["percentage_differentially_expressed"]
+    tde_overall = runif(n()) <= parameters["percentage_differentially_expressed"]
   )
 
 # write dataset

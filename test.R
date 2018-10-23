@@ -1,17 +1,37 @@
 source('workflow.R')
 
-call <- rscript_call(
-  "generate_test_data",
-  script = script_file("scripts/generate_test_data.R"),
-  outputs = list(expression = derived_file("test_data/expression.csv"))
+dataset_design <- tibble(
+  id = "1"
 )
-call$start_and_wait()
 
-call <- rlang::eval_tidy(
-  run_method_expression,
-  data = list(
-    design = design[1, ],
-    params = list(workflow_folder = ".", datasets_folder = ".", dataset_id = "test_data", output_folder = "./models")
+datasets <- rscript_call(
+  "generate_test_data",
+  design = dataset_design,
+  inputs = list(
+    script = script_file("scripts/generate_test_data.R")
+  ),
+  outputs = dataset_design %>% transmute(
+    expression = str_glue("test_data/{id}/expression.csv") %>% purrr::map(derived_file)
   )
 )
-call$start_and_wait()
+
+run_method <- rlang::eval_tidy(
+  run_method_expression,
+  data = list(
+    method_design = method_design[1, ],
+    workflow_folder = ".",
+    datasets_folder = "./test_data",
+    models_folder = "./models",
+    datasets = datasets
+  )
+)
+
+workflow <- workflow(
+  list(
+    datasets,
+    run_method
+  )
+)
+
+workflow$reset()
+workflow$run()
