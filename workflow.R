@@ -20,6 +20,7 @@ generate_method_calls <- function(datasets, method_design = method_design, workf
   
   rscript_call(
     "komparo/random",
+    design = design,
     inputs = design %>% 
       select(expression, parameters) %>% 
       mutate(
