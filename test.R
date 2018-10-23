@@ -1,6 +1,6 @@
 source('workflow.R')
 
-fs::dir_delete("modules")
+if (fs::dir_exists("modules")) fs::dir_delete("modules")
 git2r::clone("https://github.com/komparo/tde_dataset_dyntoy", local_path = "modules/dataset")
 
 source("modules/dataset/workflow.R")
