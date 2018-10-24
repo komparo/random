@@ -18,10 +18,8 @@ run_method <- generate_method_calls(
 )
 
 workflow <- workflow(
-  list(
-    datasets,
-    run_method
-  )
+  datasets,
+  run_method
 )
 
 workflow$reset()
