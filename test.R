@@ -1,25 +1,22 @@
-source('workflow.R')
+library(certigo)
 
-if (fs::dir_exists("modules")) fs::dir_delete("modules")
-git2r::clone("https://github.com/komparo/tde_dataset_dyntoy", local_path = "modules/dataset")
-
-source("modules/dataset/workflow.R")
-
-datasets <- generate_dataset_calls(
-  workflow_folder = "modules/dataset",
-  datasets_folder = "results/datasets",
-  dataset_design = dataset_design_all[1, ]
+datasets <- load_call_git(
+  "https://github.com/komparo/tde_dataset_dyntoy",
+  "modules/dataset",
+  derived_file_directory = "results/datasets"
 )
+datasets$design <- datasets$design[1, ]
 
-run_method <- generate_method_calls(
-  method_design = method_design_all[1, ],
-  datasets = datasets,
-  models_folder = "results/models"
+method <- load_call(
+  "workflow.R", 
+  derived_file_directory = "results/models",
+  datasets = datasets
 )
+method$design <- method$design[1, ]
 
 workflow <- workflow(
   datasets,
-  run_method
+  method
 )
 
 workflow$reset()

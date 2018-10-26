@@ -5,24 +5,24 @@ library(tidyr)
 library(stringr)
 library(dplyr)
 
-method_design_all <- tibble(
-  percentage_differentially_expressed = c(0, 0.25, 0.5, 0.75, 1),
-  seed = 1
-) %>% 
-  transmute(parameters = dynutils::mapdf(., parameters)) %>% 
-  mutate(id = as.character(seq_len(n())))
-
-generate_method_calls <- function(datasets, method_design = method_design_all, workflow_folder = ".", models_folder = "models") {
+get_call <- function(datasets) {
+  method_design <- tibble(
+    percentage_differentially_expressed = c(0, 0.25, 0.5, 0.75, 1),
+    seed = 1
+  ) %>% 
+    transmute(parameters = dynutils::mapdf(., parameters)) %>% 
+    mutate(id = as.character(seq_len(n())))
+  
   design <- crossing(
     datasets$design %>% select(dataset_id = id, expression),
     method_design
   ) %>% 
     mutate(
-      script = list(script_file(str_glue("{workflow_folder}/scripts/run.R"))),
+      script = list(script_file(str_glue("scripts/run.R"))),
       executor = list(docker_executor("komparo/tde_method_random")),
       
-      tde_overall = str_glue("{models_folder}/{id}/{dataset_id}/tde_overall.csv") %>% purrr::map(derived_file),
-      meta = str_glue("{models_folder}/{id}/{dataset_id}/meta.yml") %>% purrr::map(derived_file)
+      tde_overall = str_glue("{id}/{dataset_id}/tde_overall.csv") %>% purrr::map(derived_file),
+      meta = str_glue("{id}/{dataset_id}/meta.yml") %>% purrr::map(derived_file)
     )
   
   rscript_call(
