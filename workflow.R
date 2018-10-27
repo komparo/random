@@ -26,7 +26,6 @@ get_call <- function(datasets) {
     )
   
   rscript_call(
-    "komparo/random",
     design = design,
     inputs = c("script", "executor", "parameters", "expression"),
     outputs = c("tde_overall", "meta")
