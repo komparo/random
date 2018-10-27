@@ -2,7 +2,6 @@ library(certigo)
 
 datasets <- load_call_git(
   "https://github.com/komparo/tde_dataset_dyntoy",
-  "modules/dataset",
   derived_file_directory = "results/datasets"
 )
 datasets$design <- datasets$design[1, ]
