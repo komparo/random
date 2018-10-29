@@ -11,7 +11,9 @@ get_call <- function(datasets) {
     seed = 1
   ) %>% 
     transmute(parameters = dynutils::mapdf(., parameters)) %>% 
-    mutate(method_id = paste0(seq_len(n())))
+    mutate(
+      method_id = as.character(row_number())
+    )
   
   design <- crossing(
     tibble(dataset = datasets$design %>% dynutils::mapdf(identity)),
@@ -21,8 +23,8 @@ get_call <- function(datasets) {
       script = list(script_file(str_glue("scripts/run.R"))),
       executor = list(docker_executor("komparo/tde_method_random")),
       
-      tde_overall = str_glue("{id}/{map_chr(dataset, 'id')}/tde_overall.csv") %>% purrr::map(derived_file),
-      meta = str_glue("{id}/{map_chr(dataset, 'id')}/meta.yml") %>% purrr::map(derived_file)
+      tde_overall = str_glue("{method_id}/{map_chr(dataset, 'id')}/tde_overall.csv") %>% purrr::map(derived_file),
+      meta = str_glue("{method_id}/{map_chr(dataset, 'id')}/meta.yml") %>% purrr::map(derived_file)
     )
   
   rscript_call(
