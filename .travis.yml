@@ -10,7 +10,7 @@ cache:
 env:
   global:
     - DOCKERHUB_ORGANISATION=komparo
-    - DOCKERHUB_REPO=tde_method_random
+    - DOCKERHUB_REPO=tde_method_controls
 
 # install -------------------------------------------------------------------------------------
 # - pull cache from dockerhub (based on https://medium.com/mobileforgood/coding-tips-patterns-for-continuous-integration-with-docker-on-travis-ci-9cedb8348a62)

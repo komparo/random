@@ -24,7 +24,7 @@ get_call <- function(datasets) {
       id = paste0(method_id, "/", map_chr(dataset, 'id')),
       
       script = list(script_file(str_glue("scripts/run_random.R"))),
-      executor = list(docker_executor("komparo/tde_method_random")),
+      executor = list(docker_executor("komparo/tde_method_controls")),
       
       tde_overall = str_glue("{id}/tde_overall.csv") %>% purrr::map(derived_file),
       meta = str_glue("{id}/meta.yml") %>% purrr::map(derived_file)
