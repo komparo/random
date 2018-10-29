@@ -11,7 +11,7 @@ method <- load_call(
   derived_file_directory = "results/models",
   datasets = datasets
 )
-method$design <- method$design[1, ]
+method$design <- method$design
 
 workflow <- workflow(
   datasets,
