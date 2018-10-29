@@ -14,20 +14,20 @@ get_call <- function(datasets) {
     mutate(id = as.character(seq_len(n())))
   
   design <- crossing(
-    datasets$design %>% select(dataset_id = id, expression),
+    tibble(dataset = datasets$design %>% dynutils::mapdf(identity)),
     method_design
   ) %>% 
     mutate(
       script = list(script_file(str_glue("scripts/run.R"))),
       executor = list(docker_executor("komparo/tde_method_random")),
       
-      tde_overall = str_glue("{id}/{dataset_id}/tde_overall.csv") %>% purrr::map(derived_file),
-      meta = str_glue("{id}/{dataset_id}/meta.yml") %>% purrr::map(derived_file)
+      tde_overall = str_glue("{id}/{map_chr(dataset, 'id')}/tde_overall.csv") %>% purrr::map(derived_file),
+      meta = str_glue("{id}/{map_chr(dataset, 'id')}/meta.yml") %>% purrr::map(derived_file)
     )
   
   rscript_call(
     design = design,
-    inputs = c("script", "executor", "parameters", "expression"),
-    outputs = c("tde_overall", "meta")
+    inputs = exprs(script, executor, parameters, expression = map(dataset, "expression")),
+    outputs = exprs(tde_overall, meta)
   )
 }
