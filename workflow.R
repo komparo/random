@@ -11,7 +11,7 @@ get_call <- function(datasets) {
     seed = 1
   ) %>% 
     transmute(parameters = dynutils::mapdf(., parameters)) %>% 
-    mutate(method_id = paste0("komparo/random", seq_len(n())))
+    mutate(method_id = paste0(seq_len(n())))
   
   design <- crossing(
     tibble(dataset = datasets$design %>% dynutils::mapdf(identity)),
