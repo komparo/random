@@ -18,5 +18,5 @@ workflow <- workflow(
   method
 )
 
-workflow$reset()
 workflow$run()
+

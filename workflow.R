@@ -54,8 +54,8 @@ get_call <- function(datasets) {
       script = list(script_file(str_glue("scripts/run_identity.R"))),
       executor = list(docker_executor("komparo/tde_method_random")),
       
-      tde_overall = str_glue("{method_id}/{map_chr(dataset, 'id')}/tde_overall.csv") %>% purrr::map(derived_file),
-      meta = str_glue("{method_id}/{map_chr(dataset, 'id')}/meta.yml") %>% purrr::map(derived_file)
+      tde_overall = str_glue("{id}/tde_overall.csv") %>% purrr::map(derived_file),
+      meta = str_glue("{id}/meta.yml") %>% purrr::map(derived_file)
     )
   
   call_identity <- rscript_call(
@@ -64,5 +64,35 @@ get_call <- function(datasets) {
     outputs = exprs(tde_overall, meta)
   )
   
-  call_collection("", call_random, call_identity)
+  # Most variable -------------------------------------------------------------
+  method_design_variable <- tibble(
+    percentage_differentially_expressed = c(0, 0.25, 0.5, 0.75, 1),
+    seed = 1
+  ) %>% 
+    transmute(parameters = dynutils::mapdf(., parameters)) %>% 
+    mutate(
+      method_id = paste0("variable", as.character(row_number()))
+    )
+  
+  design_variable <- crossing(
+    tibble(dataset = datasets$design %>% dynutils::mapdf(identity)),
+    method_design_variable
+  ) %>% 
+    mutate(
+      id = paste0(method_id, "/", map_chr(dataset, 'id')),
+      
+      script = list(script_file(str_glue("scripts/run_variable.R"))),
+      executor = list(docker_executor("komparo/tde_method_controls")),
+      
+      tde_overall = str_glue("{id}/tde_overall.csv") %>% purrr::map(derived_file),
+      meta = str_glue("{id}/meta.yml") %>% purrr::map(derived_file)
+    )
+  
+  call_variable <- rscript_call(
+    design = design_variable,
+    inputs = exprs(script, executor, parameters, expression = map(dataset, "expression")),
+    outputs = exprs(tde_overall, meta)
+  )
+  
+  call_collection("", call_random, call_identity, call_variable)
 }
