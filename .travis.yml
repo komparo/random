@@ -25,7 +25,7 @@ install:
 #  - docker build --pull --cache-from ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} --tag ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO} .
 #  - docker push ${DOCKERHUB_ORGANISATION}/${DOCKERHUB_REPO}
   - R -e "install.packages('devtools')"
-  - R -e "devtools::install_github('komparo/certigo@devel')"
+  - R -e "devtools::install_github('komparo/tde/package@devel')"
 after_install:
   - docker images
 
