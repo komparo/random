@@ -5,12 +5,12 @@ library(dplyr)
 parameters <- jsonlite::fromJSON(inputs[["parameters"]])
 set.seed(parameters$seed)
 
-# read expression
-expression <- read.csv(inputs[["expression"]], row.names = 1) %>% as.matrix()
+# read gene_expression
+gene_expression <- read.csv(inputs[["gene_expression"]], row.names = 1) %>% as.matrix()
 
 # generate datasets
 tde_overall <- tibble(
-  feature_id = colnames(expression)
+  feature_id = colnames(gene_expression)
 ) %>% 
   mutate(
     tde_overall = runif(n()) <= parameters["percentage_differentially_expressed"]

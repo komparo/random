@@ -6,11 +6,11 @@ library(tibble)
 parameters <- jsonlite::fromJSON(inputs[["parameters"]], simplifyVector = TRUE)
 set.seed(parameters$seed)
 
-# read expression
-expression <- read.csv(inputs[["expression"]], row.names = 1) %>% as.matrix()
+# read gene_expression
+gene_expression <- read.csv(inputs[["gene_expression"]], row.names = 1) %>% as.matrix()
 
 # determine differentially expressed genes
-feature_variability <- expression %>% apply(2, sd) %>% enframe("feature_id", "sd")
+feature_variability <- gene_expression %>% apply(2, sd) %>% enframe("feature_id", "sd")
 tde_overall <- feature_variability %>% 
   arrange(desc(sd)) %>% 
   mutate(tde_overall = row_number() <= ceiling(n() * parameters[["percentage_differentially_expressed"]])) %>% 

@@ -1,3 +1,4 @@
+library(tde)
 library(certigo)
 
 # installed together with certigo
@@ -13,7 +14,7 @@ get_call <- function(datasets) {
   ) %>% 
     transmute(parameters = dynutils::mapdf(., parameters)) %>% 
     mutate(
-      method_id = paste0("random", as.character(row_number()))
+      method_id = paste0("random_", as.character(row_number()))
     )
   
   design_random <- crossing(
@@ -26,13 +27,13 @@ get_call <- function(datasets) {
       script = list(script_file(str_glue("scripts/run_random.R"))),
       executor = list(docker_executor("komparo/tde_method_controls")),
       
-      tde_overall = str_glue("{id}/tde_overall.csv") %>% purrr::map(derived_file),
+      tde_overall = str_glue("{id}/tde_overall.csv") %>% purrr::map(tde_overall),
       meta = str_glue("{id}/meta.yml") %>% purrr::map(derived_file)
     )
   
   call_random <- rscript_call(
     design = design_random,
-    inputs = exprs(script, executor, parameters, expression = map(dataset, "expression")),
+    inputs = exprs(script, executor, parameters, gene_expression = map(dataset, "gene_expression")),
     outputs = exprs(tde_overall, meta)
   )
   
@@ -90,7 +91,7 @@ get_call <- function(datasets) {
   
   call_variable <- rscript_call(
     design = design_variable,
-    inputs = exprs(script, executor, parameters, expression = map(dataset, "expression")),
+    inputs = exprs(script, executor, parameters, gene_expression = map(dataset, "gene_expression")),
     outputs = exprs(tde_overall, meta)
   )
   
