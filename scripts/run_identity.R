@@ -6,7 +6,7 @@ tde_overall <- read_csv(inputs[["tde_overall"]])
 
 parameters <- jsonlite::read_json(inputs[["parameters"]], simplifyVector = TRUE)
 if (parameters[["opposite"]]) {
-  tde_overall$tde_overall <- !tde_overall$tde_overall
+  tde_overall$significant <- !tde_overall$significant
 }
 
 # write dataset

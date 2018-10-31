@@ -13,7 +13,7 @@ tde_overall <- tibble(
   feature_id = colnames(gene_expression)
 ) %>% 
   mutate(
-    tde_overall = runif(n()) <= parameters["percentage_differentially_expressed"]
+    significant = runif(n()) <= parameters["percentage_differentially_expressed"]
   )
 
 # write dataset

@@ -13,7 +13,7 @@ gene_expression <- read.csv(inputs[["gene_expression"]], row.names = 1) %>% as.m
 feature_variability <- gene_expression %>% apply(2, sd) %>% enframe("feature_id", "sd")
 tde_overall <- feature_variability %>% 
   arrange(desc(sd)) %>% 
-  mutate(tde_overall = row_number() <= ceiling(n() * parameters[["percentage_differentially_expressed"]])) %>% 
+  mutate(significant = row_number() <= ceiling(n() * parameters[["percentage_differentially_expressed"]])) %>% 
   select(-sd)
 
 # write dataset
